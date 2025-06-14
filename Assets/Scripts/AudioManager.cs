@@ -16,6 +16,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip clipDie;
     public AudioClip clipFlagPole;
 
+    public AudioClip clipOneUp;
+
     AudioSource audioSource;
     public static AudioManager Instance;
 
@@ -25,6 +27,11 @@ public class AudioManager : MonoBehaviour
         {
             Instance = this;
             audioSource = GetComponent<AudioSource>();
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
     public void PlayJump()
@@ -78,6 +85,11 @@ public class AudioManager : MonoBehaviour
     public void PlayFlagPole()
     {
         audioSource.PlayOneShot(clipFlagPole);
+    }
+
+    public void PlayOneUp()
+    {
+        audioSource.PlayOneShot(clipOneUp);
     }
 
     

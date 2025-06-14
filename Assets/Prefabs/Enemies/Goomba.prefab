@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8054883259058084142}
   - component: {fileID: 6610841716099169192}
   - component: {fileID: 8071432229118699358}
+  - component: {fileID: 1767180317279586110}
   m_Layer: 7
   m_Name: Goomba
   m_TagString: Untagged
@@ -191,6 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: -1
   flipSprite: 1
+  partner: {fileID: 0}
 --- !u!114 &8071432229118699358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,3 +207,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   points: 100
   floatPointsPrefab: {fileID: 7444469437531173322, guid: 37a528ba47aac8a43ba9dc1fe73ae4d0, type: 3}
+--- !u!114 &1767180317279586110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6841493228296950995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc68d287df9929f44874b1d7f6940b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onlyBack: 1
+  minDistance: 15

@@ -32,17 +32,21 @@ public class Mover : MonoBehaviour
     Mario mario;
     public float climbPoleSpeed = 5;
     public bool isFlagDown;
-
+    
+    // CameraFollow cameraFollow;
+    SpriteRenderer spriteRenderer;
     private void Awake()
     {
         rb2D = GetComponent<Rigidbody2D>();
         colisiones = GetComponent<Colisiones>();
         animaciones = GetComponent<Animaciones>();
         mario = GetComponent<Mario>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
         defaultGravity = rb2D.gravityScale;
+        // cameraFollow = Camera.main.GetComponent<CameraFollow>();
     }
 
     void Update()
@@ -107,7 +111,24 @@ public class Mover : MonoBehaviour
                     currentDirection = Direction.Right;
                 }
             }
-        }        
+        }
+        bool limitRight;
+        bool limitLeft;
+        if (LevelManager.Instance.cameraFollow != null)
+        {
+            float posX = LevelManager.Instance.cameraFollow.PositionInCamera(transform.position.x, spriteRenderer.bounds.extents.x, out limitRight, out limitLeft);
+            if (limitRight && (currentDirection == Direction.Right || currentDirection == Direction.None))
+            {
+                rb2D.linearVelocity = new Vector2(0, rb2D.linearVelocity.y);
+            }
+            else if (limitLeft && (currentDirection == Direction.Left || currentDirection == Direction.None))
+            {
+                rb2D.linearVelocity = new Vector2(0, rb2D.linearVelocity.y);
+            }
+            transform.position = new Vector2(posX, transform.position.y);
+            
+        }
+        
     }
     private void FixedUpdate()
     {
@@ -215,6 +236,13 @@ public class Mover : MonoBehaviour
         rb2D.linearVelocity = Vector2.zero;
         rb2D.gravityScale = 1;
         rb2D.AddForce(Vector2.up * 5f, ForceMode2D.Impulse);
+    }
+    public void Respawn()
+    {
+        inputMoveEnabled = true;
+        rb2D.linearVelocity = Vector2.zero;
+        rb2D.gravityScale = defaultGravity;
+        transform.localScale = Vector2.one;
     }
     public void BounceUp()
     {

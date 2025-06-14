@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7734707362782623868}
   - component: {fileID: 3143097332010446053}
   - component: {fileID: 3668998275281009156}
+  - component: {fileID: 3608380778440253361}
   m_Layer: 7
   m_Name: Koopa
   m_TagString: Untagged
@@ -191,6 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: -1
   flipSprite: 1
+  partner: {fileID: 0}
 --- !u!114 &3668998275281009156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,5 +208,19 @@ MonoBehaviour:
   points: 200
   floatPointsPrefab: {fileID: 7444469437531173322, guid: 37a528ba47aac8a43ba9dc1fe73ae4d0, type: 3}
   maxStoppedTime: 5
-  rollingSpeed: 5
+  rollingSpeed: 15
   isRolling: 0
+--- !u!114 &3608380778440253361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7041606575954209825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc68d287df9929f44874b1d7f6940b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onlyBack: 1
+  minDistance: 20

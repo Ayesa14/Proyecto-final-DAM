@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8139143260233739937}
   - component: {fileID: 6058264207750730886}
   - component: {fileID: 4218688742609301721}
+  - component: {fileID: -3710029070031491145}
   m_Layer: 11
   m_Name: FireBall
   m_TagString: Untagged
@@ -115,7 +116,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!58 &6058264207750730886
 CircleCollider2D:
@@ -169,3 +170,15 @@ MonoBehaviour:
   speed: 10
   bounceForce: 5
   explosionPrefab: {fileID: 6613401180263277662, guid: 2c4daa8c0f75f464a90732247223cd20, type: 3}
+--- !u!114 &-3710029070031491145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7773435649528752225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc68d287df9929f44874b1d7f6940b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

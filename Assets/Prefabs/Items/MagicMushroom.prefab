@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4632803629199771395}
   - component: {fileID: 3314901825072695966}
   - component: {fileID: 910069669213787842}
+  - component: {fileID: 6337944848381278564}
   m_Layer: 10
   m_Name: MagicMushroom
   m_TagString: Untagged
@@ -168,6 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 2
   flipSprite: 1
+  partner: {fileID: 0}
 --- !u!114 &910069669213787842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,3 +186,17 @@ MonoBehaviour:
   points: 1000
   startVelocity: {x: 0, y: 0}
   floatPointsPrefab: {fileID: 7444469437531173322, guid: 37a528ba47aac8a43ba9dc1fe73ae4d0, type: 3}
+--- !u!114 &6337944848381278564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7123731077813519595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc68d287df9929f44874b1d7f6940b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onlyBack: 0
+  minDistance: 20

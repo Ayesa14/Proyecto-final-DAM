@@ -7,6 +7,7 @@ public class BlockCoin : MonoBehaviour
     public GameObject floatPointsPrefab;
     void Start()
     {
+        GameManager.Instance.AddCoins();
         AudioManager.Instance.PlayCoin();
         ScoreManager.Instance.SumarPuntos(200);
 

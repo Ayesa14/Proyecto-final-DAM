@@ -10,6 +10,10 @@ public class AutoMovement : MonoBehaviour
     Vector2 currentDirection;
     float defaultSpeed;
     public bool flipSprite = true;
+
+    bool hasBeenVisible;
+    public AutoMovement partner;
+
     float timer = 0;
     private void Awake()
     {
@@ -18,9 +22,24 @@ public class AutoMovement : MonoBehaviour
     }
     private void Start()
     {
-        rb2D.linearVelocity = new Vector2(speed, rb2D.linearVelocity.y);
+        // rb2D.linearVelocity = new Vector2(speed, rb2D.linearVelocity.y);
         defaultSpeed = Mathf.Abs(speed);
-
+        rb2D.bodyType = RigidbodyType2D.Kinematic;
+        movementPaused = true;
+    }
+    public void Activate(){
+        hasBeenVisible = true;
+        rb2D.bodyType = RigidbodyType2D.Dynamic;
+        rb2D.linearVelocity = new Vector2(speed, rb2D.linearVelocity.y);
+        movementPaused = false;
+        if(partner != null){
+            partner.Activate();
+        }
+    }
+    private void Update(){
+        if(spriteRenderer.isVisible && !hasBeenVisible){
+            Activate();
+        }
     }
     private void FixedUpdate()
     {

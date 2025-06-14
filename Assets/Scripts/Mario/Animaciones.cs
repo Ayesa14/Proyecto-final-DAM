@@ -74,4 +74,24 @@ public class Animaciones : MonoBehaviour
         animator.speed = 1;
     }
 
+    public void Reset()
+    {
+        animator.SetBool("Grounded", false);
+        animator.SetFloat("Velocity_X", 0);
+        animator.SetBool("Jumping", false);
+        animator.SetBool("Skid", false);
+        animator.SetBool("Invincible", false);
+        animator.SetBool("Hurt", false);
+        animator.SetBool("Crouched", false);
+        animator.SetBool("Climb", false);
+
+        animator.ResetTrigger("Dead");
+        animator.ResetTrigger("PowerUp");
+        animator.ResetTrigger("Hit");
+        animator.ResetTrigger("Shoot");
+
+        animator.SetInteger("State", 0);
+        animator.Play("States");
+    }
+
 }

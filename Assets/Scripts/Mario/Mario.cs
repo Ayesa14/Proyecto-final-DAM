@@ -22,12 +22,24 @@ public class Mario : MonoBehaviour
     bool isDead;
     enum State { Default = 0, Super = 1, Fire = 2 }
     State currentState = State.Default;
+
+    public static Mario Instance;
     private void Awake()
     {
-        mover = GetComponent<Mover>();
-        colisiones = GetComponent<Colisiones>();
-        animaciones = GetComponent<Animaciones>();
-        rb2D = GetComponent<Rigidbody2D>();
+        if (Instance == null)
+        {
+            Instance = this;
+            mover = GetComponent<Mover>();
+            colisiones = GetComponent<Colisiones>();
+            animaciones = GetComponent<Animaciones>();
+            rb2D = GetComponent<Rigidbody2D>();
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        
     }
     private void Update()
     {
@@ -113,7 +125,16 @@ public class Mario : MonoBehaviour
             colisiones.Dead();
             mover.Dead();
             animaciones.Dead();
+            GameManager.Instance.LoseLife();
         }
+    }
+    public void Respawn(Vector2 pos)
+    {
+        isDead = false;
+        colisiones.Respawn();
+        mover.Respawn();
+        animaciones.Reset();
+        transform.position = pos;
     }
     void ChangeState(int newState)
     {
@@ -136,7 +157,7 @@ public class Mario : MonoBehaviour
 
             case ItemType.Coin:
                 AudioManager.Instance.PlayCoin();
-                LevelManager.Instance.AddCoins();
+                GameManager.Instance.AddCoins();
                 break;
 
             case ItemType.FireFlower:
@@ -149,7 +170,7 @@ public class Mario : MonoBehaviour
                 break;
 
             case ItemType.Life:
-                //life
+                GameManager.Instance.NewLife();                
                 break;
 
             case ItemType.Star:

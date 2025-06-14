@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 7510789716093320391}
   - component: {fileID: 178193362032041335}
   - component: {fileID: 1780592678236747854}
+  - component: {fileID: 5658825607941661972}
   m_Layer: 10
   m_Name: Star
   m_TagString: Untagged
@@ -191,6 +192,20 @@ MonoBehaviour:
   frameTime: 0.1
   stop: 0
   loop: 1
+--- !u!114 &5658825607941661972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132251812039040713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc68d287df9929f44874b1d7f6940b7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onlyBack: 0
+  minDistance: 20
 --- !u!1 &1246033175311302889
 GameObject:
   m_ObjectHideFlags: 0

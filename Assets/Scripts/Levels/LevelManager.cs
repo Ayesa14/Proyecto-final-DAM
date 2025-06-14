@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class LevelManager : MonoBehaviour
 {
-    public HUD hud;
-    int coins;
 
     public int time;
     public float timer;
@@ -12,6 +10,10 @@ public class LevelManager : MonoBehaviour
     Mario mario;
 
     public bool levelFinished;
+
+    public Transform startPoint;
+    public Transform checkPoint;
+    public CameraFollow cameraFollow;
     public static LevelManager Instance;
     private void Awake()
     {
@@ -22,11 +24,11 @@ public class LevelManager : MonoBehaviour
     }
     void Start()
     {
-        coins = 0;
-        hud.UpdateCoins(coins);
         timer = time;
-        hud.UpdateTime(timer);
+        GameManager.Instance.hud.UpdateTime(timer);
         mario = FindAnyObjectByType<Mario>();
+        cameraFollow = Camera.main.GetComponent<CameraFollow>();
+        GameManager.Instance.LevelLoaded();
     }
 
     void Update()
@@ -36,16 +38,11 @@ public class LevelManager : MonoBehaviour
             timer -= Time.deltaTime / 0.4f; //1 segundo del juego = a 0.4segundos reales
             if (timer <= 0)
             {
-                mario.Dead();
+                GameManager.Instance.OutOfTime();
                 timer = 0;
             }
-            hud.UpdateTime(timer);
+            GameManager.Instance.hud.UpdateTime(timer);
         }
-    }
-    public void AddCoins()
-    {
-        coins++;
-        hud.UpdateCoins(coins);
     }
     public void LevelFinished()
     {
@@ -60,7 +57,7 @@ public class LevelManager : MonoBehaviour
         while (timeLeft > 0)
         {
             timeLeft--;
-            hud.UpdateTime(timeLeft);
+            GameManager.Instance.hud.UpdateTime(timer);
             ScoreManager.Instance.SumarPuntos(50);
             AudioManager.Instance.PlayCoin();
             yield return new WaitForSeconds(0.05f);
