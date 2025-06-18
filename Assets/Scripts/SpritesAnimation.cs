@@ -1,38 +1,40 @@
 using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Script que anima un objeto cambiando entre varios sprites, como si fuera un GIF.
+/// Permite animación en bucle o una sola vez, y puede detenerse.
+/// </summary>
 public class SpritesAnimation : MonoBehaviour
 {
-    public Sprite[] sprites;
-    public float frameTime = 0.1f;
-    // float timer = 0f;
-    int animationFrame = 0;
-    public bool stop;
-    public bool loop = true;
-    SpriteRenderer spriteRenderer;
+    public Sprite[] sprites;           // Array de sprites para la animación
+    public float frameTime = 0.1f;     // Tiempo entre cada frame de la animación
+    int animationFrame = 0;            // Índice del frame actual
+    public bool stop;                  // Si es true, detiene la animación
+    public bool loop = true;           // Si es true, la animación se repite en bucle
+    SpriteRenderer spriteRenderer;     // Referencia al SpriteRenderer
+
+    /// <summary>
+    /// Inicializa la referencia al SpriteRenderer.
+    /// </summary>
     private void Awake()
     {
        spriteRenderer = GetComponent<SpriteRenderer>(); 
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    /// <summary>
+    /// Inicia la corrutina de animación al comenzar.
+    /// </summary>
     void Start()
     {
         StartCoroutine(Animation());
     }
 
-    // Update is called once per frame
-    // void Update()
-    // {
-    //     timer += Time.deltaTime;
-    //     if(timer >= frameTime){
-    //         animationFrame++;
-    //         if(animationFrame >= sprites.Length){
-    //             animationFrame = 0;
-    //         }
-    //         spriteRenderer.sprite = sprites[animationFrame];
-    //         timer = 0;
-    //     }
-    // }
+    /// <summary>
+    /// Corrutina que gestiona la animación de los sprites.
+    /// Si loop es true, repite la animación hasta que stop sea true.
+    /// Si loop es false, reproduce la animación una vez y destruye el objeto.
+    /// </summary>
     IEnumerator Animation()
     {
         if (loop)
@@ -56,7 +58,7 @@ public class SpritesAnimation : MonoBehaviour
                 animationFrame++;
                 yield return new WaitForSeconds(frameTime);
             }
-            Destroy(gameObject);
+            Destroy(gameObject); // Destruye el objeto al terminar la animación
         }       
     }
 }

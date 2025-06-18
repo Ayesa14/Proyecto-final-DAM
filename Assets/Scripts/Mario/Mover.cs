@@ -2,39 +2,49 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Script que gestiona el movimiento de Mario: caminar, saltar, fricción, velocidad, animaciones y lógica especial.
+/// </summary>
 public class Mover : MonoBehaviour
 {
+    // Enum para la dirección de movimiento
     enum Direction { Left = -1, None = 0, Right = 1 };
     Direction currentDirection = Direction.None;
 
-    public float speed;
-    public float acceleration;
-    public float maxVelocity;
-    public float friction;
-    float currentVelocity = 0f;
+    // Parámetros de movimiento
+    public float speed;               // Velocidad base
+    public float acceleration;        // Aceleración al moverse
+    public float maxVelocity;         // Velocidad máxima
+    public float friction;            // Fricción al dejar de moverse
+    float currentVelocity = 0f;       // Velocidad actual
 
-    public float jumpForce;
-    public float maxJumpingTime = 1f;
-    public bool isJumping;
-    float jumpTimer = 0;
-    float defaultGravity;
-    public bool isSkidding;
+    // Parámetros de salto
+    public float jumpForce;           // Fuerza del salto
+    public float maxJumpingTime = 1f; // Tiempo máximo de salto prolongado
+    public bool isJumping;            // Indica si está saltando
+    float jumpTimer = 0;              // Temporizador de salto
+    float defaultGravity;             // Gravedad por defecto
+    public bool isSkidding;           // Indica si está derrapando
 
+    // Referencias a componentes y estados
+    public Rigidbody2D rb2D;          // Referencia al Rigidbody2D
+    Colisiones colisiones;            // Referencia al script de colisiones
+    public bool inputMoveEnabled = true; // Si se permite el movimiento por input
+    public GameObject headBox;        // Caja de colisión para la cabeza (golpear bloques)
+    Animaciones animaciones;          // Referencia al script de animaciones
+    bool isClimbingFlagPole = false;  // Indica si está bajando por el mástil
+    bool isAutoWalk;                  // Indica si está en modo auto-caminar (tras meta)
+    public float autoWalkSpeed = 5;   // Velocidad de auto-caminar
+    Mario mario;                      // Referencia al script principal de Mario
+    public float climbPoleSpeed = 5;  // Velocidad al bajar el mástil
+    public bool isFlagDown;           // Indica si la bandera ya ha bajado
 
-    public Rigidbody2D rb2D;
-    Colisiones colisiones;
-    public bool inputMoveEnabled = true;
-    public GameObject headBox;
-    Animaciones animaciones;
-    bool isClimbingFlagPole = false;
-    bool isAutoWalk;
-    public float autoWalkSpeed = 5;
-    Mario mario;
-    public float climbPoleSpeed = 5;
-    public bool isFlagDown;
-    
     // CameraFollow cameraFollow;
-    SpriteRenderer spriteRenderer;
+    SpriteRenderer spriteRenderer;    // Referencia al SpriteRenderer
+
+    /// <summary>
+    /// Inicializa referencias y valores por defecto.
+    /// </summary>
     private void Awake()
     {
         rb2D = GetComponent<Rigidbody2D>();
@@ -42,17 +52,27 @@ public class Mover : MonoBehaviour
         animaciones = GetComponent<Animaciones>();
         mario = GetComponent<Mario>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        rb2D.gravityScale = 3f; // Valor inicial de gravedad
     }
+
+    /// <summary>
+    /// Inicializa valores al empezar la escena.
+    /// </summary>
     void Start()
     {
         defaultGravity = rb2D.gravityScale;
         // cameraFollow = Camera.main.GetComponent<CameraFollow>();
     }
 
+    /// <summary>
+    /// Lógica de entrada y control de salto, dirección y límites de cámara.
+    /// </summary>
     void Update()
     {
         bool grounded = colisiones.Grounded();
         animaciones.Grounded(grounded);
+
+        // Si el nivel terminó y Mario está en el mástil, salta del mástil
         if (LevelManager.Instance.levelFinished)
         {
             if (grounded && isClimbingFlagPole)
@@ -63,6 +83,8 @@ public class Mover : MonoBehaviour
         else
         {
             headBox.SetActive(false);
+
+            // Lógica de salto variable
             if (isJumping)
             {
                 if (rb2D.linearVelocity.y > 0f)
@@ -88,10 +110,12 @@ public class Mover : MonoBehaviour
                         isJumping = false;
                         jumpTimer = 0;
                         animaciones.Jumping(false);
+                        rb2D.gravityScale = defaultGravity;
                     }
                 }
             }
 
+            // Entrada de movimiento
             currentDirection = Direction.None;
             if (inputMoveEnabled)
             {
@@ -112,6 +136,8 @@ public class Mover : MonoBehaviour
                 }
             }
         }
+
+        // Lógica de límites de cámara
         bool limitRight;
         bool limitLeft;
         if (LevelManager.Instance.cameraFollow != null)
@@ -130,16 +156,22 @@ public class Mover : MonoBehaviour
         }
         
     }
+
+    /// <summary>
+    /// Lógica física de movimiento, aceleración, fricción y animaciones.
+    /// </summary>
     private void FixedUpdate()
     {
         if (LevelManager.Instance.levelFinished)
         {
             if (isClimbingFlagPole)
             {
+                // Mario baja por el mástil
                 rb2D.MovePosition(rb2D.position + Vector2.down * climbPoleSpeed * Time.fixedDeltaTime);
             }
             else if (isAutoWalk)
             {
+                // Mario camina automáticamente tras llegar a la meta
                 Vector2 linearVelocity = new Vector2(currentVelocity, rb2D.linearVelocity.y);
                 rb2D.linearVelocity = linearVelocity;
                 animaciones.Velocity(Mathf.Abs(currentVelocity));
@@ -149,6 +181,8 @@ public class Mover : MonoBehaviour
         {
             isSkidding = false;
             currentVelocity = rb2D.linearVelocity.x;
+
+            // Movimiento a la derecha
             if (currentDirection > 0)
             {
                 if (currentVelocity < 0)
@@ -163,6 +197,7 @@ public class Mover : MonoBehaviour
                 }
 
             }
+            // Movimiento a la izquierda
             else if (currentDirection < 0)
             {
                 if (currentVelocity > 0)
@@ -176,6 +211,7 @@ public class Mover : MonoBehaviour
                     transform.localScale = new Vector2(-1, 1);
                 }
             }
+            // Sin movimiento, aplicar fricción
             else
             {
                 if (currentVelocity > 1f)
@@ -191,6 +227,8 @@ public class Mover : MonoBehaviour
                     currentVelocity = 0f;
                 }
             }
+
+            // Si Mario está agachado, no se mueve
             if (mario.isCrouched)
             {
                 currentVelocity = 0;
@@ -204,6 +242,9 @@ public class Mover : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Ejecuta el salto de Mario.
+    /// </summary>
     void Jump()
     {
         if (!isJumping)
@@ -224,12 +265,18 @@ public class Mover : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Mueve a Mario a la derecha (usado en auto-walk).
+    /// </summary>
     void MoveRight()
     {
         Vector2 linearVelocity = new Vector2(1f, 0f);
         rb2D.linearVelocity = linearVelocity;
     }
 
+    /// <summary>
+    /// Lógica cuando Mario muere.
+    /// </summary>
     public void Dead()
     {
         inputMoveEnabled = false;
@@ -237,6 +284,10 @@ public class Mover : MonoBehaviour
         rb2D.gravityScale = 1;
         rb2D.AddForce(Vector2.up * 5f, ForceMode2D.Impulse);
     }
+
+    /// <summary>
+    /// Lógica cuando Mario reaparece.
+    /// </summary>
     public void Respawn()
     {
         inputMoveEnabled = true;
@@ -244,11 +295,19 @@ public class Mover : MonoBehaviour
         rb2D.gravityScale = defaultGravity;
         transform.localScale = Vector2.one;
     }
+
+    /// <summary>
+    /// Hace que Mario rebote hacia arriba (por ejemplo, al pisar un enemigo).
+    /// </summary>
     public void BounceUp()
     {
         rb2D.linearVelocity = Vector2.zero;
         rb2D.AddForce(Vector2.up * 10f, ForceMode2D.Impulse);
     }
+
+    /// <summary>
+    /// Lógica para bajar por el mástil de meta.
+    /// </summary>
     public void DownFlagPole()
     {
         inputMoveEnabled = false;
@@ -261,6 +320,10 @@ public class Mover : MonoBehaviour
         animaciones.Climb(true);
         transform.position = new Vector2(transform.position.x + 0.1f, transform.position.y);
     }
+
+    /// <summary>
+    /// Corrutina para saltar del mástil al terminar el nivel.
+    /// </summary>
     IEnumerator JumpOffPole()
     {
         isClimbingFlagPole = false;
@@ -283,7 +346,6 @@ public class Mover : MonoBehaviour
         GetComponent<SpriteRenderer>().flipX = false;
         isAutoWalk = true;
         currentVelocity = autoWalkSpeed;
-
     }
 }
 
